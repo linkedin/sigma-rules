@@ -1,0 +1,25 @@
+title: Suspicious Bash File Upload - Linux
+id: f30e0410-65be-4f85-b1cf-ba0b51f25b51
+status: experimental
+description: Bash file redirection to a network protocol pseudo-device
+references:
+    - https://gtfobins.github.io/gtfobins/bash/#file-upload
+tags:
+    - attack.exfiltration
+    - attack.t1567
+author: Seth Hanford (LinkedIn)
+date: 2025-08-20
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: '/bash'
+        CommandLine|contains|all:
+            - 'c'
+            - '>'
+        CommandLine|re: '/dev/(tc|ud)p/'
+    condition: selection
+falsepositives:
+    - Legitimate redirection via bash to /dev/tcp or /dev/udp
+level: medium
