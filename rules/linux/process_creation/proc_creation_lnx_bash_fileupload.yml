@@ -5,21 +5,24 @@ description: Bash file redirection to a network protocol pseudo-device
 references:
     - https://gtfobins.github.io/gtfobins/bash/#file-upload
 tags:
+    - attack.execution
     - attack.exfiltration
     - attack.t1567
+    - attack.t1059.004
 author: Seth Hanford (LinkedIn)
 date: 2025-08-20
 logsource:
     category: process_creation
     product: linux
 detection:
-    selection:
+    selection_bash_output_redir:
         Image|endswith: '/bash'
-        CommandLine|contains|all:
-            - 'c'
-            - '>'
-        CommandLine|re: '/dev/(tc|ud)p/'
-    condition: selection
+        CommandLine|contains: '>'
+    selection_dvcs:
+        CommandLine|contains:
+            - '/dev/tcp'
+            - '/dev/udp'
+    condition: all of selection*
 falsepositives:
     - Legitimate redirection via bash to /dev/tcp or /dev/udp
 level: medium
